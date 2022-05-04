@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require("validator");
 const internModel = require("../models/internModel")
+const collegeModel = require("../models/collegeModel");
 
 const createIntern = async function (req,res){
     try{
@@ -37,14 +38,17 @@ const createIntern = async function (req,res){
     return res.status(409).send({ status: false, msg: "Intern with this mobile number already exists." })
 
     if(!collegeId)
-    return res.status(400).send({status:false,message:"The collegeId of intern is required"})
+        return res.status(400).send({status:false,message:"The collegeId of intern is required"})
 
     if (!mongoose.Types.ObjectId.isValid(collegeId)) 
         return res.status(400).send({ status: false, msg: "Please provide valid collegeId" });
       
+    const checkCollege= await collegeModel.findById(collegeId)
+    if(!checkCollege)
+        return res.status(404).send({status:false,message:"No college exists with this collegeId"})
 
     const createIntern = await internModel.create(dataFromBody)
-      return res.status(201).send({status:true,message:createIntern})
+        return res.status(201).send({status:true,message:createIntern})
     }
     catch(err){
         return res.status(500).send({status:false,message:err.message})
