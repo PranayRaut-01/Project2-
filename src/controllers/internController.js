@@ -6,7 +6,7 @@ const collegeModel = require("../models/collegeModel");
 const createIntern = async function (req,res){
     try{
     const dataFromBody = req.body
-    const  {name,email,mobile,collegeId}=dataFromBody
+    const  {name,email,mobile,collegeName}=dataFromBody
     if(!name)
     return res.status(400).send({status:false,message:"The name of intern is required"})
 
@@ -37,17 +37,24 @@ const createIntern = async function (req,res){
     if(duplicateMobile)
     return res.status(409).send({ status: false, msg: "Intern with this mobile number already exists." })
 
-    if(!collegeId)
-        return res.status(400).send({status:false,message:"The collegeId of intern is required"})
+    if(!collegeName)
+        return res.status(400).send({status:false,message:"The college name of intern is required"})
 
-    if (!mongoose.Types.ObjectId.isValid(collegeId)) 
-        return res.status(400).send({ status: false, msg: "Please provide valid collegeId" });
       
-    const checkCollege= await collegeModel.findById(collegeId)
+    const checkCollege= await collegeModel.findOne({name:collegeName})
     if(!checkCollege)
-        return res.status(404).send({status:false,message:"No college exists with this collegeId"})
+        return res.status(404).send({status:false,message:"No college exists with this college name"})
 
-    const createIntern = await internModel.create(dataFromBody)
+    const clgId = checkCollege._id
+
+    const body=  {
+        name:name,
+        email:email,
+        mobile:mobile,
+        collegeId:clgId
+        }
+
+    const createIntern = await internModel.create(body)
         return res.status(201).send({status:true,message:createIntern})
     }
     catch(err){
