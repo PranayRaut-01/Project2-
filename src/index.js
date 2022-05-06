@@ -5,6 +5,7 @@ const mongoose= require('mongoose');
 const app = express();
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 ///////////////// [ MONGO-DB CONNECTION ] /////////////////
 mongoose.connect("mongodb+srv://PranayR24:LNs6IH7mT8iLlT4b@pranaycluster.2bkjp.mongodb.net/Project2", {
