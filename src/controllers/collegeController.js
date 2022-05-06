@@ -33,6 +33,10 @@ const createCollege = async function (req, res) {
         .send({ status: false, message: "College name is required" });
     }
 
+    const duplicateCollege= await collegeModel.findOne({name:requestBody.name})
+    if(duplicateCollege)
+    return res.status(409).send({ status: false, msg: "This college name already exists." })
+
     if (!isValid(requestBody.fullName)) {
       return res
         .status(400)
