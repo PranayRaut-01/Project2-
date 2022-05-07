@@ -17,7 +17,7 @@ const createIntern = async function (req,res){
     if (validEmail === false)
       return res.status(400).send({ status: false, msg: "Please enter valid email" })
 
-    const duplicateEmail = await internModel.findOne({email})
+    const duplicateEmail = await internModel.findOne({email:email,isDeleted:false})
     if(duplicateEmail)
       return res.status(409).send({ status: false, msg: "Intern with this email already exists." })
 
@@ -33,7 +33,7 @@ const createIntern = async function (req,res){
     if(!validateMobile(mobile))
     return res.status(400).send({status:false,message:"Please enter valid mobile number"})
 
-    const duplicateMobile= await internModel.findOne({mobile})
+    const duplicateMobile= await internModel.findOne({mobile:mobile,isDeleted:false})
     if(duplicateMobile)
     return res.status(409).send({ status: false, msg: "Intern with this mobile number already exists." })
 
@@ -41,7 +41,7 @@ const createIntern = async function (req,res){
         return res.status(400).send({status:false,message:"The college name of intern is required"})
 
       
-    const checkCollege= await collegeModel.findOne({name:collegeName})
+    const checkCollege= await collegeModel.findOne({name:collegeName,isDeleted:false})
     if(!checkCollege)
         return res.status(404).send({status:false,message:"No college exists with this college name"})
 

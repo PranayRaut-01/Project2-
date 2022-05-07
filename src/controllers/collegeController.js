@@ -33,7 +33,7 @@ const createCollege = async function (req, res) {
         .send({ status: false, message: "College name is required" });
     }
 
-    const duplicateCollege= await collegeModel.findOne({name:requestBody.name})
+    const duplicateCollege= await collegeModel.findOne({name:requestBody.name,isDeleted:false})
     if(duplicateCollege)
     return res.status(409).send({ status: false, msg: "This college name already exists." })
 
@@ -51,7 +51,7 @@ const createCollege = async function (req, res) {
     const validateURL = function (URL) {
       const regexp =
         /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
-      return regexp.test(URL);
+      return regexp.test(URL);            // .test returns Boolean
     };
     if (!validateURL(requestBody.logoLink))
       return res
@@ -70,7 +70,7 @@ const getCollegeDetails = async function (req, res) {
     if (!req.query.collegeName)
       return res.status(400).send({ status: false, message: "collegeName is required in query" });
 
-    const collegeRequested = await collegeModel.findOne({  name: req.query.collegeName,});
+    const collegeRequested = await collegeModel.findOne({ name: req.query.collegeName , isDeleted:false});
 
     if (!collegeRequested)
       return res
@@ -80,7 +80,7 @@ const getCollegeDetails = async function (req, res) {
     const { _id, name, fullName, logoLink } = collegeRequested;  // destructuring the collegeRequested object
 
     const specificCollegeIntern = await internModel
-      .find({ collegeId: _id })
+      .find({ collegeId: _id , isDeleted:false })
       .select({
         collegeId: 0,
         isDeleted: 0,

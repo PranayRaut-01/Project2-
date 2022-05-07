@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const objectId = mongoose.Schema.Types.ObjectId;
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 ///////////////// [ INTERN SCHEMA HERE ] /////////////////
 const internSchema = new mongoose.Schema({
@@ -18,7 +18,7 @@ const internSchema = new mongoose.Schema({
         required:"The mobile number is required." 
     }, 
     collegeId: {
-        type: objectId,
+        type: ObjectId,
         required: "The college id is required.",
         ref: ('College')
     },
